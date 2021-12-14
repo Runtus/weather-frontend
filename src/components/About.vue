@@ -9,13 +9,14 @@
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="stylus">
 .about {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
 }
 
 .logo {

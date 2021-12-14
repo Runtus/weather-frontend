@@ -1,46 +1,10 @@
-# Introduction
-This template includes the necessary tools when you use vue3 to develop.
+# 毕业设计前端
 
-
-# Installation
-
-  After pulling the code, execute `npm install` or `yarn` in the root directory of the project. After success, execute `npm run dev` or `yarn dev` to start the project(the nodejs + npm will be installed in your computer).
-
-## Built - in
-* [vue](https://v3.cn.vuejs.org/) - v3.2
-* [vue-router](https://router.vuejs.org/zh/) - v4
-* [eslint](https://eslint.bootcss.com/)
-* [tailwindcss](https://www.tailwindcss.cn/) - v2.2
-* [pinia](https://pinia.esm.dev/) - v2
-
-## Directory tree
-```
-├── LICENSE
-├── README.md
-├── index.html
-├── package.json
-├── postcss.config.js
-├── public
-│   └── favicon.ico
-├── src
-│   ├── App.vue
-│   ├── assets
-│   │   ├── logo.png
-│   │   └── yilu.jpg
-│   ├── components
-│   │   ├── About.vue
-│   │   └── HelloWorld.vue
-│   ├── env.d.ts
-│   ├── global.css
-│   ├── main.ts
-│   ├── router
-│   │   └── index.ts
-│   └── store
-│       ├── counter.ts
-│       └── index.ts
-├── tailwind.config.js
-├── tsconfig.json
-├── vite.config.ts
-└── yarn.lock
-
-```
+### 最后系统的实现成果设想
+1. 有一个世界地图，世界地图可以展示实时天气。
+2. 点击世界地图上的每个地区（或区域），会进一步展示详细的当前天气数据，以及该地区对应的时空天气（近一个周或近一个月 -> 具体实现看数据是否允许）。
+3. 各个地区天气数据的分析图 （主要是 `天气因素-时间`分析图）
+   1. 降水量
+   2. 温度
+   3. pm2.5
+   4. 等等（主要是把具有分析价值的数据进行统一分析）
