@@ -5,7 +5,7 @@
 
 
 <template>
-    <header class="Header flex">
+    <header class="Header flex w-full h-16">
         
     </header>    
 </template>

@@ -10,9 +10,18 @@
         html {
             padding: 0;
             height: 0;
-            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            min-width: 600px;
         }
     </style>
+    <script>
+        window._AMapSecurityConfig = {
+            securityJsCode:'ae31d3b26398c54e74b59f66f063bb38',
+        }
+    </script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=49d5392431b9c4e2cbaaa97a79177bc1"></script>
     <body>
         <div id="app"></div>
         <script type="module" src="/src/main.ts"></script>

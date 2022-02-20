@@ -1,17 +1,19 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-// @ts-ignore
-import HelloWorld from './components/HelloWorld.vue';
-import Sidebar from './components/Sidebar.vue'
 import { useStore } from '@/store/counter';
+import { getCurrentInstance } from 'vue-demi';
+import Header from '@/components/Header.vue'
+
+const instance = getCurrentInstance()
 
 const store = useStore();
+
 </script>
 
 <template>
-    <div class="content flex flex-row">
-        <Sidebar />
+    <div class="content flex flex-col w-full">
+        <Header />
         <router-view></router-view>
     </div>
 </template>
