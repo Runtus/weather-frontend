@@ -2,8 +2,6 @@
 import WorldMapContent from '@/components/contents/worldmap.vue';
 // @ts-ignore
 import HomeSidebar from '@/components/Sidebar.vue';
-
-
 </script>
 
 <template>
@@ -13,7 +11,4 @@ import HomeSidebar from '@/components/Sidebar.vue';
     </div>
 </template>
 
-<style lang="stylus" scoped>
-
-</style>
-
+<style lang="stylus" scoped></style>

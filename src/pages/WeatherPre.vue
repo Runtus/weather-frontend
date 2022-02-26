@@ -1,25 +1,14 @@
 <script lang="ts" setup>
-// 当前天气以及天气预报
-// @ts-ignore
-import CurrentWeather from '@/components/weathers/LocalCurrentWeather.vue'
-// @ts-ignore
-import WeatherCard from '@/components/weathers/Common/Card.vue'
-// @ts-ignore
-import WeatherPre from '@/components/weathers/LocalPreWeather.vue'
-
+/**
+ * TODO: 代码完事后，删除这部分的代码
+ * 1. 某地的24h/ 7day 温度情况 -> switch和Echarts同步变化
+ * 2. 某地的7day/30day 降水情况
+ * 3. 某地空气质量情况 7day
+ *
+ *
+ */
 </script>
 
-<template>
-    <div class="w-10/12">
-        <WeatherCard>
-            <CurrentWeather />
-        </WeatherCard>
-        <WeatherCard>
-            <WeatherPre />
-        </WeatherCard>
-    </div>
-</template>
+<template></template>
 
-<style lang="stylus" scoped>
-
-</style>
+<style lang="stylus" scoped></style>

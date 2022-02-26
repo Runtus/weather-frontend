@@ -40,7 +40,7 @@ export default {
             });
 
             rectangle.setMap(map);
-             map.setFitView([ rectangle ])
+            map.setFitView([rectangle]);
         });
 
         const data = ref(0);
@@ -50,7 +50,6 @@ export default {
         };
     },
 };
-
 </script>
 
 <template>

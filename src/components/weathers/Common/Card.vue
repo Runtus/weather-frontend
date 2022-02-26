@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import { defineProps, withDefaults } from 'vue'
-const props = withDefaults(defineProps<{weather: string}>(),{ weather: '阴'})
-
+import { defineProps, withDefaults } from 'vue';
+const props = withDefaults(defineProps<{ weather: string }>(), { weather: '阴' });
 </script>
 
 <template>
-<!-- 通过props.weather的情况来决定背景颜色以及图片url -->
-    <div class="card w-10/12 rounded-2xl bg-gray-200 relative">
+    <!-- 通过props.weather的情况来决定背景颜色以及图片url -->
+    <div class="card w-8/12 rounded-2xl bg-gray-200 relative">
         <slot class="h-full"></slot>
     </div>
 </template>

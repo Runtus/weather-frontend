@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 // 实时天气展示板块
-import { defineProps, withDefaults } from 'vue'
-import { current } from '@/utils/time'
-import { WeatherKeys } from '@/types/weather'
+import { defineProps, withDefaults } from 'vue';
+import { current } from '@/utils/time';
+import { WeatherKeys } from '@/types/weather';
 
 // 如果外部引入类型会有bug，issue_url:[https://github.com/vuejs/core/issues/4294]
 type NowWeather = {
@@ -20,57 +20,56 @@ const props = withDefaults(defineProps<NowWeather>(), {
     temp: 2,
     water: 0,
     weather: '晴',
-    comment: '今天白天阴，夜晚有小雨，温度和昨天差不多，现在6°，有风，空气不错。'
-})
+    comment: '今天白天阴，夜晚有小雨，温度和昨天差不多，现在6°，有风，空气不错。',
+});
 
 // 需要渲染的天气属性
 const Weather_attrs: Array<{
-    key: WeatherKeys,
-    name: string
+    key: WeatherKeys;
+    name: string;
 }> = [
     {
         key: 'wind',
-        name: '相对湿度'
+        name: '相对湿度',
     },
     {
         key: 'temp',
-        name: '体感温度'
+        name: '体感温度',
     },
     {
         key: 'water',
-        name: '降水量'
-    }
-]
+        name: '降水量',
+    },
+];
 
-const current_time = current('min')
-
+const current_time = current('min');
 </script>
 
 <template>
-    <div class="current-weather-box h-full flex flex-col justify-end ">
+    <div class="current-weather-box h-full flex flex-col justify-end">
         <div class="current-total flex flex-col justify-around h-1/2 px-12">
             <div class="current-live flex justify-center">
                 <!-- TODO 先mock -->
                 <i class="qi-overcast"></i>
-                <span class="temp ml-4 font-medium">{{props.temp}}°</span>
+                <span class="temp ml-4 font-medium">{{ props.temp }}°</span>
             </div>
-            <p class="weather-desc">{{props.comment}}</p>
+            <p class="weather-desc">{{ props.comment }}</p>
         </div>
         <div class="current-detail flex items-center justify-around h-1/3 px-12">
             <div class="w-full h-2/3 w-2/3 flex justify-around items-center bg-gray-300 bg-opacity-50 rounded-xl">
                 <div class="item" v-for="attr in Weather_attrs" :key="attr.key">
-                <p>
-                    {{props[attr.key]}}
-                </p>
-                <p>
-                    {{attr.name}}
-                </p>
+                    <p>
+                        {{ props[attr.key] }}
+                    </p>
+                    <p>
+                        {{ attr.name }}
+                    </p>
                 </div>
             </div>
         </div>
     </div>
     <p class="absolute time font-xs text-gray-400">
-        {{current_time}}
+        {{ current_time }}
     </p>
 </template>
 

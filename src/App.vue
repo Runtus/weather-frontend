@@ -3,12 +3,12 @@
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import { useStore } from '@/store/counter';
 import { getCurrentInstance } from 'vue-demi';
-import Header from '@/components/Header.vue'
+// @ts-ignore
+import Header from '@/components/Header.vue';
 
-const instance = getCurrentInstance()
+const instance = getCurrentInstance();
 
 const store = useStore();
-
 </script>
 
 <template>
