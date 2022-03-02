@@ -8,17 +8,18 @@ import { WeatherKeys } from '@/types/weather';
 type NowWeather = {
     wind: string;
     sd: string; // 相对湿度
-    temp: number;
-    water: number; // 降水量
-    weather: '晴' | '阴' | '雨'; // 后续有增加在这里增加
+    temp: string;
+    water: string; // 降水量
+    weather: string; // 后续有增加在这里增加
     comment: string; // 当地天气评价
 };
+
 
 const props = withDefaults(defineProps<NowWeather>(), {
     wind: '14级北风',
     sd: '50%',
-    temp: 2,
-    water: 0,
+    temp: '2',
+    water: '0',
     weather: '晴',
     comment: '今天白天阴，夜晚有小雨，温度和昨天差不多，现在6°，有风，空气不错。',
 });
@@ -29,7 +30,7 @@ const Weather_attrs: Array<{
     name: string;
 }> = [
     {
-        key: 'wind',
+        key: 'sd',
         name: '相对湿度',
     },
     {
@@ -57,13 +58,13 @@ const current_time = current('min');
         </div>
         <div class="current-detail flex items-center justify-around h-1/3 px-12">
             <div class="w-full h-2/3 w-2/3 flex justify-around items-center bg-gray-300 bg-opacity-50 rounded-xl">
-                <div class="item" v-for="attr in Weather_attrs" :key="attr.key">
-                    <p>
+                <div class="item h-full flex flex-col justify-center" v-for="attr in Weather_attrs" :key="attr.key">
+                    <span>
                         {{ props[attr.key] }}
-                    </p>
-                    <p>
+                    </span>
+                    <span>
                         {{ attr.name }}
-                    </p>
+                    </span>
                 </div>
             </div>
         </div>

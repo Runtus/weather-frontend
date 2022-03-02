@@ -2,9 +2,9 @@
 // @ts-ignore
 import WeatherCard from '@/components/weathers/Common/Card.vue';
 // @ts-ignore
-import LocalPreWeather from '@/components/weathers/LocalPreWeather.vue';
+import LocalPreWeather from '@/components/weathers/current/LocalPreWeather.vue';
 // @ts-ignore
-import LocalCurrentWeather from '@/components/weathers/LocalCurrentWeather.vue';
+import LocalCurrentWeather from '@/components/weathers/current/LocalCurrentWeather.vue';
 </script>
 
 <template>

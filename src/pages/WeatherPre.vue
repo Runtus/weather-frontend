@@ -7,8 +7,19 @@
  *
  *
  */
+// @ts-ignore
+import LocationSearch from '@/components/GPSPosition.vue';
+// @ts-ignore
+import PreWeatherTemp from '@/components/weathers/pre/preTemp.vue'
 </script>
 
-<template></template>
+<template>
+    <div class="SearchBox w-full bg-gray-200">
+        <LocationSearch />
+    </div>
+    <div class="content">
+        <PreWeatherTemp />
+    </div>
+</template>
 
 <style lang="stylus" scoped></style>

@@ -5,7 +5,7 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
 export type ResponseType<T> = {
     code: '0' | '1';
-    data: T | null;
+    data: T;
     info: string;
 };
 

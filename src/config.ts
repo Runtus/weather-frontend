@@ -12,11 +12,11 @@ export const router_header_map = [
     {
         name: 'pre_weather',
         title: '天气预报',
-        url: '/pre-weather',
+        url: '/weather-pre',
     },
     {
         name: 'history_weather',
         title: '历史天气',
-        url: '/history-weather',
+        url: '/weather-history',
     },
 ];
