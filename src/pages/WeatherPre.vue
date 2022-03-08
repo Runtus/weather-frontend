@@ -10,16 +10,21 @@
 // @ts-ignore
 import LocationSearch from '@/components/GPSPosition.vue';
 // @ts-ignore
-import PreWeatherTemp from '@/components/weathers/pre/preTemp.vue'
+import PreWeatherTemp from '@/components/weathers/pre/preTemp.vue';
 </script>
 
 <template>
     <div class="SearchBox w-full bg-gray-200">
         <LocationSearch />
     </div>
-    <div class="content">
+    <div class="content w-full">
         <PreWeatherTemp />
     </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.content {
+    height: 700px;
+    border: 1px solid black;
+}
+</style>

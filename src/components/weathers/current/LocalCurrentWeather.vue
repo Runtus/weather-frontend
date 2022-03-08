@@ -14,7 +14,6 @@ type NowWeather = {
     comment: string; // 当地天气评价
 };
 
-
 const props = withDefaults(defineProps<NowWeather>(), {
     wind: '14级北风',
     sd: '50%',

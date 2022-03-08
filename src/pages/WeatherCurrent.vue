@@ -37,7 +37,7 @@ const data = reactive<{
         weather: string;
         temp: string;
     }>;
-    air: CWeather['air']
+    air: CWeather['air'];
 }>({
     current: {
         obsTime: '', // 数据观测时间
@@ -68,7 +68,7 @@ const data = reactive<{
         so2: '',
         co: '',
         o3: '',
-    }
+    },
 });
 
 function request() {
@@ -88,7 +88,7 @@ function request() {
                         weather: item.rain,
                         temp: item.temp,
                     }));
-                    data.air = response.air
+                    data.air = response.air;
                 }
             })
             .finally(() => {
@@ -125,10 +125,7 @@ onMounted(() => {
         <WeatherCard class="mt-12">
             <WeatherPre :data="data.observer24" ref="PreWeatherRef" />
         </WeatherCard>
-        <WeatherPM25
-          class="mt-12"
-          :air="data.air"
-        />
+        <WeatherPM25 class="mt-12" :air="data.air" />
     </div>
 </template>
 

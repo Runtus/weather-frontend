@@ -31,7 +31,6 @@ const options = reactive({
     ],
 });
 
-const lineChartRef = ref();
 const chartsDataSet = () => {
     const xAxis: Array<string> = [];
     const yAxis: Array<number> = [];
@@ -55,7 +54,7 @@ watch(
 
 <template>
     <div id="weatherPre24" class="weatherInfo w-full h-full">
-        <WeatherLineChart self-id="pre-24" :options="options" :set-option="chartsDataSet" ref="lineChartRef" :change="changeKey" />
+        <WeatherLineChart self-id="pre-24" :options="options" :change="changeKey" />
     </div>
 </template>
 

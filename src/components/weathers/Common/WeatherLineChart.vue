@@ -7,6 +7,7 @@ import { GridComponent } from 'echarts/components';
 import { LineChart } from 'echarts/charts';
 import { UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
+import { throttling } from '@/utils/throttling';
 echarts.use([GridComponent, LineChart, CanvasRenderer, UniversalTransition]);
 
 type Props = {
@@ -15,9 +16,11 @@ type Props = {
     options?: EChartsCoreOption;
 };
 
-const eChartObject = reactive<{value: echarts.ECharts | null}>({
-    value: null
-})
+let eChartObject: any = null;
+// TODO vue3 如果对echarts对象进行响应式包装 会导致后续的resize方法报错 因为其底层无法读取proxy背后的属性
+// const eChartObject = reactive<{value: echarts.ECharts | null}>({
+//     value: null
+// })
 
 const props = withDefaults(defineProps<Props>(), {
     selfId: 'defalut',
@@ -26,8 +29,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 // 图表渲染函数
 const render = () => {
-    if (props.options && eChartObject.value) {
-        eChartObject.value.setOption(props.options);
+    if (props.options && eChartObject) {
+        eChartObject.setOption(props.options);
     }
 };
 
@@ -43,9 +46,15 @@ watch(
 // 初始化
 onMounted(() => {
     const renderDOM = document.getElementById(props.selfId) as HTMLElement;
+    console.log(props.selfId);
+
     const myChart = echarts.init(renderDOM);
-    eChartObject.value = myChart;
-})
+    eChartObject = myChart;
+
+    window.onresize = throttling(() => {
+        myChart.resize();
+    }, 16);
+});
 </script>
 
 <template>

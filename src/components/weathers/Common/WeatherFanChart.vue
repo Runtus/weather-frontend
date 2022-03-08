@@ -17,25 +17,25 @@ type Props = {
 };
 const props = withDefaults(defineProps<Props>(), {
     id: 'defaults',
-    change: 0
+    change: 0,
 });
 
-const eChartObject = reactive<{value: echarts.ECharts | null}>({
-    value: null
-})
+const eChartObject = reactive<{ value: echarts.ECharts | null }>({
+    value: null,
+});
 
 const render = () => {
-    if(props.options && eChartObject.value) {
-        eChartObject.value.setOption(props.options)
+    if (props.options && eChartObject.value) {
+        eChartObject.value.setOption(props.options);
     }
-}
+};
 
 watch(
     () => props.change,
     () => {
-        render()
+        render();
     }
-)
+);
 
 // 初始化 保持Echarts
 onMounted(() => {
