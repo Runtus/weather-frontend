@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { defineProps, onMounted, reactive, withDefaults, watchEffect, watch } from 'vue';
-import { useToolsDataStore } from '@/store/weatherTools';
+import { useToolsDataStore, useDateRange } from '@/store/weatherTools';
 import { PreWeather30 } from '@/axios/weatherPre';
 import { defalutOptions, rangeSetting } from './utils/defaultValue';
-import { preWeatherYData } from './utils/series';
+import { preWeatherYData, currentWeatherYData, historicalWeather, historicalXAxias } from './utils/series';
 import { rangeSettingOption } from './utils/yRange';
 import * as echarts from 'echarts/core';
 import { TitleComponent, ToolboxComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components';
@@ -41,6 +41,7 @@ const props = withDefaults(
 );
 
 const render_data = useToolsDataStore();
+const date_range = useDateRange();
 
 const options = reactive({
     value: {
@@ -158,9 +159,8 @@ watch(
                 };
                 item.data.observer24.forEach(item => {
                     x.push(item.hour);
-                    // TODO 根据weatherAttrs来更改对比
-                    y.data.push(Number(item.temp));
                 });
+                y.data = [...currentWeatherYData(props.weatherAttr as 'temp' | 'sd' | 'rain' | 'aqi' , item.data)]
                 xAxis = [...x];
                 series.push(y);
             });
@@ -186,12 +186,13 @@ watch(
             let xAxis: Array<string> = [];
             const serirs: Array<OptionSeriesItem> = [];
             (render_data.value as Array<{ key: string; data: HistoricalWeather }>).forEach(item => {
-                const x: Array<string> = [...item.data.temp.legend];
+                const x: Array<string> = [...historicalXAxias(props.weatherAttr as 'temp' | 'sd' | 'rain' | 'aqi', item.data)];
                 const y: OptionSeriesItem = {
                     name: item.key,
                     type: 'line',
-                    data: item.data.temp.avgTmp.map(item => Number(item)),
+                    data: []
                 };
+                y.data = [...historicalWeather(props.weatherAttr as 'temp' | 'sd' | 'rain' | 'aqi', item.data)]
                 xAxis = [...x];
                 serirs.push(y);
             });
@@ -201,6 +202,10 @@ watch(
 
         options.value.legend.data = legend;
         options.value.yAxis = yOptions;
+        // date-range-setting
+        const begin = options.value.xAxis.data[0];
+        const end = options.value.xAxis.data[options.value.xAxis.data.length - 1];
+        date_range.set(begin, end);
         render();
     }
 );

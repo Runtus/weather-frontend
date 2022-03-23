@@ -26,7 +26,7 @@ const onInputChange = (value: string) => {
         </div>
         <div class="tools flex mr-12">
             <div class="inputBox mr-4">
-                <InputSearch class="w-24" @search="onInputChange" />
+                <InputSearch aria-placeholder="城市搜索" class="w-24" @search="onInputChange" />
             </div>
             <div class="avatar w-8 h-8">
                 <img

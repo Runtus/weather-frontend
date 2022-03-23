@@ -45,3 +45,18 @@ export const useToolsDataStore = defineStore<
         },
     },
 });
+
+export const useDateRange = defineStore('dateRange', {
+    state: () => {
+        return {
+            begin: '',
+            end: '',
+        }
+    },
+    actions: {
+        set(begin: string, end: string) {
+            this.begin = begin;
+            this.end = end;
+        }
+    }
+})

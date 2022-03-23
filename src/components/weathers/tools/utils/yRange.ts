@@ -43,8 +43,12 @@ const type_range_map: {
     aqi: {
         type: 'value',
         name: '空气质量',
+        interval: 30,
         min: 0,
         max: 300,
+        axisLabel: {
+            formatter: '{value}'
+        }
     },
 };
 

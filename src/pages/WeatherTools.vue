@@ -14,7 +14,7 @@ import { TreeSelect, Select, DatePicker, MonthPicker, RangePicker } from 'ant-de
 import { fetchPreWeather } from '@/axios/weatherPre';
 import { requestCurrentWeather } from '@/axios/weatherCurrent';
 import { fetchHistoricalTotalWeather, fetchHistorical, HistoricalTemp } from '@/axios/weatherHistory';
-import { useToolsDataStore } from '@/store/weatherTools';
+import { useToolsDataStore, useDateRange } from '@/store/weatherTools';
 import { debounce } from '@/utils/debouce';
 import { fetchSearchCitys } from '@/axios/weatherTools';
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
@@ -36,6 +36,7 @@ const form = reactive<{
 
 // stores
 const dataStore = useToolsDataStore();
+const dateRange = useDateRange();
 
 // 预对比天气类型
 const onWeatherTypeSelect = (value: 'pre' | 'cur' | 'h-month' | 'h-date') => {
