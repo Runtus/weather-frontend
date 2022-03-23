@@ -1,26 +1,35 @@
 <script lang="ts" setup>
-// 温度的折线图，两侧有tab可选
-// tab主要是：时段选择 ： 3day，7day，15day，30day
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { usePreWeatherStore } from '@/store/weather';
+import { useLocationSearchResult } from '@/store/search';
 import { useRoute } from 'vue-router';
 // @ts-ignore
 import WeatherMixChart from '@/components/weathers/Common/WeatherMixChart.vue';
+// @ts-ignore
+import HoverCard from './cards/hoverCard.vue';
 import { Select } from 'ant-design-vue';
 import { formatTime } from '@/utils/time';
 import { SelectTypes } from 'ant-design-vue/es/select';
 import { fetchPreWeather, PreWeather30, PreWeather30Item } from '@/axios/weatherPre';
 
-const routes = useRoute();
-// TODO 为了方便调试，地址默认使用北京
-const DEFAULT_LOCATION = '北京';
+// TODO 增加一个气温展示模块，hover到图表的某一列时，在展示模块里会显示
 
+const locationSearch = useLocationSearchResult();
 const preWeatherStore = usePreWeatherStore();
 
 const selectValue = ref('15');
 const change = ref(0);
 
+const chooseWeather = reactive({
+    date: '',
+    text: '',
+    code: '',
+});
+
 const chartsOptions = reactive({
+    title: {
+        text: `${locationSearch.location}市未来气温湿度预测`,
+    },
     tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -39,7 +48,7 @@ const chartsOptions = reactive({
         },
     },
     legend: {
-        data: ['Rain', 'MaxTemp', 'MinTemp'],
+        data: ['相对湿度', '最高温度', '最低温度'],
     },
     xAxis: [
         {
@@ -64,8 +73,8 @@ const chartsOptions = reactive({
         {
             type: 'value',
             name: '温度',
-            min: -25,
-            max: 25,
+            min: -10,
+            max: 40,
             interval: 5,
             axisLabel: {
                 formatter: '{value} °C',
@@ -152,11 +161,22 @@ const onChange = (value: string) => {
     selectValue.value = value;
 };
 
-const fetchData = (location: string) => {
+const onChartClick = (params: any) => {
+    const target = preWeatherStore.value[params.dataIndex] as PreWeather30Item;
+    if (target) {
+        chooseWeather.code = target.code;
+        chooseWeather.date = `${target.date.split('-')[1]}-${target.date.split('-')[2]}`;
+        chooseWeather.text = target.text;
+    }
+};
+
+const fetchData = async () => {
+    const location = locationSearch.location;
     fetchPreWeather(location)
         .then(res => {
             preWeatherStore.set(res.data);
             optionsSetting(Number(selectValue.value));
+            onChartClick({ dataIndex: 0 });
         })
         .catch(err => {
             preWeatherStore.set([]);
@@ -165,21 +185,43 @@ const fetchData = (location: string) => {
         });
 };
 
+watch(
+    () => locationSearch.location,
+    async () => {
+        await fetchData();
+        chartsOptions.title.text = `${locationSearch.location}市未来气温湿度预测`;
+    }
+);
+
 onMounted(() => {
-    const location = (routes.query.location as string) || DEFAULT_LOCATION;
-    fetchData(location);
+    fetchData();
 });
 </script>
 
 <template>
-    <div class="preTemp w-full h-full">
-        <div class="select-box">
-            <Select class="w-36" :options="options" @change="onChange" :defaultValue="selectValue" />
+    <div class="w-full h-full flex justify-between">
+        <div class="chartBox bg-gray-100 w-3/4 h-full rounded-xl">
+            <WeatherMixChart :options="chartsOptions" :change="change" self-id="preweather" :click="onChartClick" />
         </div>
-        <div class="chartBox w-full h-5/6">
-            <WeatherMixChart :options="chartsOptions" :change="change" self-id="preweather" />
+        <div class="toolBox w-1/6 h-full flex flex-col">
+            <div class="select-box flex flex-col h-1/6 w-full bg-gray-100 rounded-xl">
+                <span class="text-lg font-medium mb-2">日期范围选择</span>
+                <Select class="w-36" :options="options" @change="onChange" :defaultValue="selectValue" />
+            </div>
+            <div class="displayCard mt-16">
+                <HoverCard :weather-pre="chooseWeather" />
+            </div>
         </div>
     </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.preTemp,.chartBox{
+  padding: 20px;
+}
+
+.select-box {
+    padding-top: 12px;
+    padding-left: 12px;
+}
+</style>

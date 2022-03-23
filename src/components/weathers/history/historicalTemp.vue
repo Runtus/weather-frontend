@@ -1,10 +1,13 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, defineProps, withDefaults, watch } from 'vue';
 import { Select } from 'ant-design-vue';
 import { SelectTypes } from 'ant-design-vue/es/select';
 import { fetchHistorical } from '@/axios/weatherHistory';
+import { useLocationSearchResult } from '@/store/search';
 // @ts-ignore
 import TempLineChart from './charts/tempLineChart.vue';
+
+const citySearch = useLocationSearchResult();
 
 // options设置
 let options: SelectTypes['options'] = reactive([]);
@@ -27,13 +30,13 @@ for (let i = 12; i > 0; i--) {
 // Echarts Options
 const echartsOptions = reactive({
     title: {
-        text: '历史一年月度气温统计表',
+        text: `${citySearch.location}市历史一年月度气温统计表`,
     },
     tooltip: {
         trigger: 'axis',
     },
     legend: {
-        data: ['maxTemp', 'minTemp', 'avgTemp'],
+        data: ['最高温度', '最低温度', '平均温度'],
     },
     grid: {
         left: '3%',
@@ -106,26 +109,35 @@ const onChange = async (value: string) => {
         echartsOptions.series[1].data = data.minTmp;
         echartsOptions.series[2].data = data.avgTmp.map(item => Number(item));
         echartsOptions.xAxis.data = data.legend;
+        echartsOptions.title.text = `${citySearch.location}市历史一年月度气温统计表`;
         change.value++;
     } else {
         // TODO 提示，请求失败无数据
     }
 };
-
 onMounted(() => {
     onChange('2022,01');
 });
 </script>
 
 <template>
-    <div class="w-full h-full">
-        <div class="selectBox">
-            <Select class="w-40" :options="options" @change="onChange" default-value="2022,01" />
-        </div>
-        <div class="chartsBox w-full h-5/6">
+    <div class="w-full h-full flex justify-between">
+        <div class="chartsBox w-4/5 h-full bg-gray-100 rounded-xl">
             <TempLineChart self-id="historical-temp" :options="echartsOptions" :change="change" />
+        </div>
+        <div class="selectBox h-1/6 flex flex-col items-center rounded-xl bg-gray-100">
+            <p class="text-xl">区间选择</p>
+            <Select class="w-40" :options="options" @change="onChange" default-value="2022,01" />
         </div>
     </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.chartsBox {
+    padding: 24px;
+}
+
+.selectBox {
+    padding: 20px;
+}
+</style>

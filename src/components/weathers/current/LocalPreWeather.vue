@@ -2,7 +2,7 @@
 // 未来24小时的天气预报
 import { defineProps, withDefaults, reactive, onMounted, ref, watch } from 'vue';
 // @ts-ignore
-import WeatherLineChart from '@/components/weathers/Common/WeatherLineChart.vue';
+import WeatherLineChart from './charts/tempLineChart.vue';
 
 type Previews = {
     data: Array<{
@@ -16,17 +16,51 @@ const props = withDefaults(defineProps<Previews>(), {});
 const changeKey = ref(1);
 
 const options = reactive({
+    title: {
+        text: '温度日变化趋势',
+    },
+    tooltip: {
+        trigger: 'axis',
+    },
+    legend: {},
+    toolbox: {
+        show: true,
+        feature: {
+            restore: {},
+            saveAsImage: {},
+        },
+    },
     xAxis: {
         type: 'category',
+        boundaryGap: false,
+        name: '时分',
         data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     },
     yAxis: {
         type: 'value',
+        axisLabel: {
+            formatter: '{value} °C',
+        },
     },
     series: [
         {
-            data: [150, 230, 224, 218, 135, 147, 260],
+            name: '温度',
             type: 'line',
+            data: [10, 11, 13, 11, 12, 12, 9],
+            tooltip: {
+                valueFormatter: function (value: number) {
+                    return `${value} °C`;
+                },
+            },
+            //   markPoint: {
+            //     data: [
+            //       { type: 'max', name: 'Max' },
+            //       { type: 'min', name: 'Min' }
+            //     ]
+            //   },
+            markLine: {
+                data: [{ type: 'average', name: 'Avg' }],
+            },
         },
     ],
 });
@@ -53,7 +87,7 @@ watch(
 </script>
 
 <template>
-    <div id="weatherPre24" class="weatherInfo w-full h-full">
+    <div class="bg-gray-100 weatherInfo w-full h-full p-4 rounded-xl">
         <WeatherLineChart self-id="pre-24" :options="options" :change="changeKey" />
     </div>
 </template>

@@ -3,7 +3,7 @@
 import { reactive, watch, ref } from 'vue';
 // TODO vscode插件bug，在setup语法糖中使用hook会导致插件识别export失败
 // @ts-ignore
-import CurrentWeather from '@/components/weathers/current/LocalCurrentWeather.vue';
+import WeatherCurrentCard from '@/components/weathers/Common/WeatherCityCards.vue';
 // @ts-ignore
 import WeatherCard from '@/components/weathers/Common/Card.vue';
 // @ts-ignore
@@ -12,6 +12,7 @@ import WeatherPre from '@/components/weathers/current/LocalPreWeather.vue';
 import WeatherPM25 from '@/components/weathers/current/LocalPM25.vue';
 // @ts-ignore
 import LocationSearch from '@/components/GPSPosition.vue';
+import { useLocationSearchResult } from '@/store/search';
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted } from 'vue-demi';
 import { requestCurrentWeather, CurrentWeather as CWeather } from '@/axios/weatherCurrent';
@@ -19,16 +20,9 @@ import { requestCurrentWeather, CurrentWeather as CWeather } from '@/axios/weath
 const routes = useRoute();
 const router = useRouter();
 
-// 监听路由参数进行页面刷新，因为query的更新并不能导致页面的刷新
-watch(
-    () => routes.query,
-    () => {
-        router.go(0);
-    }
-);
+const locationSearch = useLocationSearchResult();
 
 const isLoading = ref(false);
-const PreWeatherRef = ref(null);
 
 const data = reactive<{
     current: CWeather['current'];
@@ -73,7 +67,7 @@ const data = reactive<{
 
 function request() {
     isLoading.value = true;
-    const location = routes.query.location as string;
+    const location = locationSearch.location;
     if (location) {
         requestCurrentWeather(location)
             .then(res => {
@@ -97,36 +91,41 @@ function request() {
     }
 }
 
+watch(
+    () => locationSearch.location,
+    () => {
+        request();
+    }
+);
+
 onMounted(() => {
-    // 请求数据
     request();
 });
-// :wind="data.observer24[0].wind_l"
-// :sd="data.current.sd"
-// :temp="data.current.temp"
-// :water="data.observer24[0].rain"
 </script>
 
 <template>
-    <div class="positionBox w-full bg-gray-200">
-        <LocationSearch />
-    </div>
-    <div class="w-full flex flex-col items-center mx-auto">
-        <WeatherCard class="mt-12">
-            <CurrentWeather
-                :wind="data.current.windSpeed"
-                :sd="data.current.humidity"
-                :temp="data.current.temp"
-                :water="data.current.precip"
-                :weather="data.current.text"
-                comment="Test"
-            />
-        </WeatherCard>
-        <WeatherCard class="mt-12">
-            <WeatherPre :data="data.observer24" ref="PreWeatherRef" />
-        </WeatherCard>
-        <WeatherPM25 class="mt-12" :air="data.air" />
+    <div class="WeatherCurrent w-3/4 flex flex-col mx-auto pb-12">
+        <div class="currentCardBox mt-4 w-full flex items-center justify-between">
+            <WeatherCurrentCard />
+            <WeatherPM25 :air="data.air" />
+        </div>
+        <div class="currentChartBox w-full mt-4">
+            <WeatherPre :data="data.observer24" />
+        </div>
     </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.WeatherCurrent {
+
+    .currentChartBox {
+        height: 500px;
+        min-width: 1140px
+    }
+
+    .currentCardBox {
+        height: 500px;
+        min-width: 1140px;
+    }
+}
+</style>

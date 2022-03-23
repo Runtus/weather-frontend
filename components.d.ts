@@ -3,19 +3,35 @@
 // Read more: https://github.com/vuejs/vue-next/pull/3399
 
 declare module 'vue' {
-    export interface GlobalComponents {
-        Card: typeof import('./src/components/weathers/Common/Card.vue')['default'];
-        CitySearch: typeof import('./src/components/CitySearch.vue')['default'];
-        GPSPosition: typeof import('./src/components/GPSPosition.vue')['default'];
-        Header: typeof import('./src/components/Header.vue')['default'];
-        LocalCurrentWeather: typeof import('./src/components/weathers/LocalCurrentWeather.vue')['default'];
-        LocalPM25: typeof import('./src/components/weathers/LocalPM25.vue')['default'];
-        LocalPreWeather: typeof import('./src/components/weathers/LocalPreWeather.vue')['default'];
-        Sidebar: typeof import('./src/components/Sidebar.vue')['default'];
-        WeatherFanChart: typeof import('./src/components/weathers/Common/WeatherFanChart.vue')['default'];
-        WeatherLineChart: typeof import('./src/components/weathers/Common/WeatherLineChart.vue')['default'];
-        Worldmap: typeof import('./src/components/contents/worldmap.vue')['default'];
-    }
+  export interface GlobalComponents {
+    CalendarWeather: typeof import('./src/components/weathers/pre/calendarWeather.vue')['default']
+    Card: typeof import('./src/components/weathers/Common/Card.vue')['default']
+    CitySearch: typeof import('./src/components/CitySearch.vue')['default']
+    GaugeTemp: typeof import('./src/components/weathers/pre/cards/components/GaugeTemp.vue')['default']
+    GPSPosition: typeof import('./src/components/GPSPosition.vue')['default']
+    Header: typeof import('./src/components/Header.vue')['default']
+    HistoricalMonthTemp: typeof import('./src/components/weathers/history/historicalMonthTemp.vue')['default']
+    HistoricalRain: typeof import('./src/components/weathers/history/historicalRain.vue')['default']
+    HistoricalSD: typeof import('./src/components/weathers/history/historicalSD.vue')['default']
+    HistoricalTemp: typeof import('./src/components/weathers/history/historicalTemp.vue')['default']
+    HoverCard: typeof import('./src/components/weathers/pre/cards/hoverCard.vue')['default']
+    LocalCurrentWeather: typeof import('./src/components/weathers/Common/LocalCurrentWeather.vue')['default'];
+    LocalPM25: typeof import('./src/components/weathers/current/LocalPM25.vue')['default']
+    LocalPreWeather: typeof import('./src/components/weathers/current/LocalPreWeather.vue')['default']
+    LocationCards: typeof import('./src/components/weathers/Common/locationCards.vue')['default'];
+    PreRain: typeof import('./src/components/weathers/pre/preRain.vue')['default']
+    PreTemp: typeof import('./src/components/weathers/pre/preTemp.vue')['default']
+    Sidebar: typeof import('./src/components/Sidebar.vue')['default']
+    TempCard: typeof import('./src/components/weathers/Common/tempCard.vue')['default'];
+    TempLineChart: typeof import('./src/components/weathers/current/charts/tempLineChart.vue')['default']
+    WeatherCityCards: typeof import('./src/components/weathers/Common/WeatherCityCards.vue')['default']
+    WeatherFanChart: typeof import('./src/components/weathers/Common/WeatherFanChart.vue')['default']
+    WeatherLineChart: typeof import('./src/components/weathers/Common/WeatherLineChart.vue')['default']
+    WeatherMixChart: typeof import('./src/components/weathers/Common/WeatherMixChart.vue')['default']
+    WeatherSelects: typeof import('./src/components/weathers/tools/weatherSelects.vue')['default'];
+    WeatherSelfControlChart: typeof import('./src/components/weathers/tools/weatherSelfControlChart.vue')['default']
+    Worldmap: typeof import('./src/components/contents/worldmap.vue')['default']
+  }
 }
 
-export {};
+export { }

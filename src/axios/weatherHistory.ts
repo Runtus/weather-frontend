@@ -11,27 +11,25 @@ export type HistoricalTemp = {
 
 export type HistoricalWeather = {
     temp: {
-        legend: Array<string>,
-        minTmp: Array<number>,
-        maxTmp: Array<number>,
-        avgTmp: Array<number>
-    },
+        legend: Array<string>;
+        minTmp: Array<number>;
+        maxTmp: Array<number>;
+        avgTmp: Array<number>;
+    };
     rain: {
-        legend: Array<string>,
-        rain_days: Array<number>,
-        pcpn: Array<number> // 降水量
-    },
+        legend: Array<string>;
+        rain_days: Array<number>;
+        pcpn: Array<number>; // 降水量
+    };
     sd: {
-        legend: Array<string>,
-        value: Array<number>
-    },
+        legend: Array<string>;
+        value: Array<number>;
+    };
     aqi: Array<{
-        date: string,
-        value: Array<number>
-    }>
-}
-
-
+        date: string;
+        value: Array<number>;
+    }>;
+};
 
 export const fetchHistorical: (location: string, year?: string, month?: string) => Promise<ResponseType<HistoricalTemp>> = (location, year, month) =>
     axios({
@@ -43,10 +41,10 @@ export const fetchHistorical: (location: string, year?: string, month?: string) 
         },
     }).then(res => res.data);
 
-export const fetchHistoricalTotalWeather: (location: string) => Promise<ResponseType<HistoricalWeather>> = (location) =>
+export const fetchHistoricalTotalWeather: (location: string) => Promise<ResponseType<HistoricalWeather>> = location =>
     axios({
         url: `/historical/total`,
         params: {
-            location
-        }
+            location,
+        },
     }).then(res => res.data);

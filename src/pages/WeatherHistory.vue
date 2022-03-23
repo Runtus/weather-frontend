@@ -1,77 +1,77 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue';
-import { useRoute } from 'vue-router'
+import { onMounted, reactive, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { useLocationSearchResult } from '@/store/search';
 // @ts-ignore
-import HistoricalTemp from '@/components/weathers/history/historicalTemp.vue'
+import HistoricalTemp from '@/components/weathers/history/historicalTemp.vue';
 // @ts-ignore
-import HistoricalRain from '@/components/weathers/history/historicalRain.vue'
+import HistoricalRain from '@/components/weathers/history/historicalRain.vue';
 // @ts-ignore
-import HistoricalMonthTemp from '@/components/weathers/history/historicalMonthTemp.vue'
+import HistoricalMonthTemp from '@/components/weathers/history/historicalMonthTemp.vue';
 // @ts-ignore
-import HistoricalSD from '@/components/weathers/history/historicalSD.vue'
-import { fetchHistoricalTotalWeather, HistoricalWeather } from '@/axios/weatherHistory'
+import HistoricalSD from '@/components/weathers/history/historicalSD.vue';
+import { fetchHistoricalTotalWeather, HistoricalWeather } from '@/axios/weatherHistory';
 
-const defalut = '成都';
-const change = ref(0)
+const locationSearch = useLocationSearchResult();
+const change = ref(0);
 const route = useRoute();
 const weather = reactive<{
-    value: HistoricalWeather
+    value: HistoricalWeather;
 }>({
     value: {
         temp: {
             legend: [],
             maxTmp: [],
             minTmp: [],
-            avgTmp: []
+            avgTmp: [],
         },
         rain: {
             legend: [],
             rain_days: [],
-            pcpn: []
+            pcpn: [],
         },
         sd: {
             legend: [],
-            value: []
+            value: [],
         },
-        aqi: []
-    }
-})
+        aqi: [],
+    },
+});
 
 const getHistoricalInfo = async () => {
-    const res = await fetchHistoricalTotalWeather((route.query.location as string) || defalut)
-    if(res.code === '0'){
+    const res = await fetchHistoricalTotalWeather(locationSearch.location);
+    if (res.code === '0') {
         weather.value = res.data;
         change.value++;
     } else {
-
     }
-}
+};
+
+watch(
+    () => locationSearch.location,
+    () => {
+        getHistoricalInfo();
+    }
+);
 
 onMounted(() => {
-    getHistoricalInfo()
-})
+    getHistoricalInfo();
+});
 </script>
 
 <template>
-    <div class="HistoricalBox w-full">
-        <div class="tempChartBox w-full">
+    <div class="HistoricalBox w-full flex flex-col items-center">
+        <div class="chartBox tempChartBox w-3/4">
             <HistoricalTemp />
         </div>
-        <div class="rainChartBox w-full">
-            <HistoricalRain
-                :rain="weather.value.rain"
-             />
+        <div class="chartBox rainChartBox w-3/4">
+            <HistoricalRain :rain="weather.value.rain" />
         </div>
-        <div class="monthTempChartBox w-full">
-            <HistoricalMonthTemp
-                :month-temp="weather.value.temp"
-             />
+        <div class="chartBox monthTempChartBox w-3/4">
+            <HistoricalMonthTemp :month-temp="weather.value.temp" />
         </div>
-        <div class="SDChartBox w-full">
-            <HistoricalSD
-                :sd="weather.value.sd"
-                :change="change"
-             />
+        <div class="chartBox SDChartBox w-3/4">
+            <HistoricalSD :sd="weather.value.sd" :change="change" />
         </div>
     </div>
 </template>
@@ -81,4 +81,7 @@ onMounted(() => {
     height: 700px;
 }
 
+.chartBox {
+    margin-top: 40px;
+}
 </style>

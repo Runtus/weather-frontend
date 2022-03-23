@@ -8,7 +8,7 @@ import { CurrentWeather } from '@/axios/weatherCurrent';
 const options = reactive({
     title: {
         text: '空气质量',
-        subtext: 'Fake Data',
+        subtext: '城市当前空气质量',
         left: 'center',
     },
     tooltip: {
@@ -70,14 +70,15 @@ watch(
 </script>
 
 <template>
-    <div class="fanChartBox">
+    <div class="fanChartBox bg-gray-100 rounded-xl">
         <FanChart id="current_air_quality" :options="options" :change="change" />
     </div>
 </template>
 
 <style lang="stylus" scoped>
 .fanChartBox {
-    width: 600px;
-    height: 300px;
+    padding: 30px;
+    width: 700px;
+    height: 484px;
 }
 </style>

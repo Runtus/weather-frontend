@@ -1,14 +1,3 @@
-export const current = (exact?: 'day' | 'min') => {
-    const exact_time = exact || 'day';
-    const time = new Date();
-    let result = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`;
-
-    if (exact_time === 'min') {
-        result += ` ${time.getHours()}:${time.getMinutes()}`;
-    }
-    return result;
-};
-
 export const formatTime = (date?: Date, format?: 'xx-xx' | 'xx-xx-xx') => {
     const time = date || new Date();
     const formatStyle = format || 'xx-xx';
@@ -25,4 +14,18 @@ export const formatTime = (date?: Date, format?: 'xx-xx' | 'xx-xx-xx') => {
             break;
     }
     return result;
+};
+
+export const current = (exact?: 'day' | 'min') => {
+    const exact_time = exact || 'day';
+    const time = new Date();
+    let pre = time.getFullYear() + '-' + formatTime(time, 'xx-xx');
+
+    const hours = `${time.getHours() >= 10 ? time.getHours() : '0' + time.getHours()}`;
+    const minuts = `${time.getMinutes() >= 10 ? time.getMinutes() : '0' + time.getMinutes()}`;
+
+    if (exact_time === 'min') {
+        pre += ` ${hours}:${minuts}`;
+    }
+    return pre;
 };

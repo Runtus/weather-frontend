@@ -7,4 +7,4 @@ export type NowWeather = {
     comment: string; // 当地天气评价
 };
 
-export type WeatherKeys = 'wind' | 'sd' | 'temp' | 'water' | 'weather' | 'comment';
+export type WeatherKeys = 'wind' | 'humidity' | 'temp' | 'precip' | 'cloud' | 'comment';

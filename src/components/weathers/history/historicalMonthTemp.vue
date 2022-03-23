@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, withDefaults, reactive, watch, ref } from 'vue';
+import { useLocationSearchResult } from '@/store/search';
 // @ts-ignore
 import TempLineChart from './charts/tempLineChart.vue';
 
@@ -21,11 +22,13 @@ const props = withDefaults(defineProps<Props>(), {
     }),
 });
 
+const citySearch = useLocationSearchResult();
+
 const change = ref(0);
 
 const options = reactive({
-        title: {
-        text: '历史一年月度气温统计表',
+    title: {
+        text: `${citySearch.location}市历史月度气温统计`,
     },
     tooltip: {
         trigger: 'axis',
@@ -84,15 +87,20 @@ watch(
         options.series[0].data = props.monthTemp.maxTmp;
         options.series[1].data = props.monthTemp.avgTmp;
         options.series[2].data = props.monthTemp.minTmp;
+        options.title.text = `${citySearch.location}市历史月度气温统计`;
         change.value++;
     }
 );
 </script>
 
 <template>
-    <div class="tempMonthChartBox w-full h-full">
+    <div class="tempMonthChartBox w-full h-full bg-gray-100 rounded-xl">
         <TempLineChart self-id="Historical-month-temp" :options="options" :change="change" />
     </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.tempMonthChartBox {
+    padding: 24px;
+}
+</style>

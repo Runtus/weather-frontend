@@ -8,9 +8,7 @@ const routes = useRoute();
 
 const search_city = ref('');
 
-onMounted(() => {
-    console.log('刷新了');
-});
+onMounted(() => {});
 
 function citySearch() {
     const value = search_city.value;

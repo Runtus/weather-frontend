@@ -48,3 +48,11 @@ export const requestCurrentWeather: (location: string) => Promise<ResponseType<C
             location,
         },
     }).then(res => res.data);
+
+export const fetchCurrentCardData: (location: string) => Promise<ResponseType<CurrentWeather['current']>> = location =>
+    axios({
+        url: '/current/card',
+        params: {
+            location,
+        },
+    }).then(res => res.data);

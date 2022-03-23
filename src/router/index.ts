@@ -5,14 +5,31 @@ const WorldMap = () => import('@/pages/WorldMap.vue');
 const WeatherCurrent = () => import('@/pages/WeatherCurrent.vue');
 const WeatherPre = () => import('@/pages/WeatherPre.vue');
 const WeatherHistory = () => import('@/pages/WeatherHistory.vue');
+const WeatherTools = () => import('@/pages/WeatherTools.vue');
 
 // const RealTime = () => import('@/')
 
 const routes: RouteRecordRaw[] = [
-    { path: '/', component: WorldMap },
-    { path: '/weather', component: WeatherCurrent },
-    { path: '/weather-pre', component: WeatherPre },
-    { path: '/weather-history', component: WeatherHistory },
+    {
+        path: '/',
+        component: WorldMap,
+    },
+    {
+        path: '/current',
+        component: WeatherCurrent,
+    },
+    {
+        path: '/pre',
+        component: WeatherPre,
+    },
+    {
+        path: '/historical',
+        component: WeatherHistory,
+    },
+    {
+        path: '/tools',
+        component: WeatherTools,
+    },
 ];
 
 export const router = createRouter({

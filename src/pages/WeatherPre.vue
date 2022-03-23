@@ -14,17 +14,19 @@ import PreWeatherTemp from '@/components/weathers/pre/preTemp.vue';
 </script>
 
 <template>
-    <div class="SearchBox w-full bg-gray-200">
-        <LocationSearch />
-    </div>
-    <div class="content w-full">
-        <PreWeatherTemp />
+    <div class="content w-full flex items-center justify-center pt-12">
+        <div class="preWeatherBox w-3/4">
+            <PreWeatherTemp />
+        </div>
     </div>
 </template>
 
 <style lang="stylus" scoped>
 .content {
-    height: 700px;
-    border: 1px solid black;
+
+
+    .preWeatherBox {
+        height: 800px;
+    }
 }
 </style>

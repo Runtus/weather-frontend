@@ -2,22 +2,23 @@
 // 混合图 url: https://echarts.apache.org/examples/zh/editor.html?c=mix-line-bar
 import { defineProps, withDefaults, watch, reactive, onMounted } from 'vue';
 import * as echarts from 'echarts/core';
-import { ToolboxComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components';
+import { ToolboxComponent, TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components';
 import { BarChart, LineChart } from 'echarts/charts';
 import { UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 import { throttling } from '@/utils/throttling';
 
-echarts.use([ToolboxComponent, TooltipComponent, GridComponent, LegendComponent, BarChart, LineChart, CanvasRenderer, UniversalTransition]);
+echarts.use([ToolboxComponent, TitleComponent, TooltipComponent, GridComponent, LegendComponent, BarChart, LineChart, CanvasRenderer, UniversalTransition]);
 
 type Props = {
-    id: string;
-    options: echarts.EChartsCoreOption;
+    selfId: string;
+    options: echarts.EChartsCoreOption | null;
     change: number;
+    click?: (params: any) => void;
 };
 
 const props = withDefaults(defineProps<Props>(), {
-    id: 'default',
+    selfId: 'default',
     change: 0,
 });
 
@@ -37,17 +38,21 @@ watch(
 );
 
 onMounted(() => {
-    const dom = document.getElementById(props.id) as HTMLElement;
+    const dom = document.getElementById(props.selfId) as HTMLElement;
     const myChart = echarts.init(dom);
     eChartObject = myChart;
     window.onresize = throttling(() => {
         eChartObject.resize();
     }, 16);
+
+    if (props.click) {
+        myChart.on('click', props.click);
+    }
 });
 </script>
 
 <template>
-    <div :id="props.id" class="mixCharts w-full h-full"></div>
+    <div :id="props.selfId" class="mixCharts w-full h-full"></div>
 </template>
 
 <style lang="stylus" scoped></style>

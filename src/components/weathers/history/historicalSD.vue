@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, withDefaults, reactive, ref, watch } from 'vue';
+import { useLocationSearchResult } from '@/store/search';
 // @ts-ignore
 import SDLineChart from './charts/tempLineChart.vue';
 
@@ -12,6 +13,8 @@ type Props = {
 };
 
 const change = ref(0);
+
+const citySearch = useLocationSearchResult();
 
 const props = withDefaults(defineProps<Props>(), {
     sd: () => ({
@@ -60,11 +63,11 @@ const options = reactive({
             data: [0],
             smooth: true,
             tooltip: {
-                 valueFormatter: function (value: number) {
+                valueFormatter: function (value: number) {
                     return value + ' %';
                 },
-            }
-        }
+            },
+        },
     ],
 });
 
@@ -74,15 +77,20 @@ watch(
         console.log(123);
         options.xAxis.data = props.sd.legend;
         options.series[0].data = props.sd.value;
+        options.title.text = `${citySearch.location}市历史湿度统计`;
         change.value++;
     }
 );
 </script>
 
 <template>
-    <div class="SDChartBox w-full h-full">
+    <div class="SDChartBox w-full h-full bg-gray-100 rounded-xl">
         <SDLineChart self-id="historical-SD" :change="change" :options="options" />
     </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.SDChartBox {
+    padding: 24px;
+}
+</style>

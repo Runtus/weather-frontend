@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { defineProps, withDefaults, reactive, ref, watch } from 'vue';
+import { useLocationSearchResult } from '@/store/search';
 // @ts-ignore
 import WeatherMixChart from '@/components/weathers/Common/WeatherMixChart.vue';
 
+const citySearch = useLocationSearchResult();
 
-const change = ref(0)
+const change = ref(0);
 type Props = {
     rain: {
         legend: string[];
@@ -20,10 +22,13 @@ const props = withDefaults(defineProps<Props>(), {
         rain_days: [],
         pcpn: [],
     }),
-    change: 0
+    change: 0,
 });
 
 const options = reactive({
+    title: {
+        text: `${citySearch.location}市年度降水量统计`,
+    },
     tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -42,7 +47,7 @@ const options = reactive({
         },
     },
     legend: {
-        data: ['rain', 'rainDays'],
+        data: ['降雨量', '降雨天数'],
     },
     xAxis: [
         {
@@ -66,7 +71,7 @@ const options = reactive({
         },
         {
             type: 'value',
-            name: '降雨天数总计',
+            name: '降雨天数',
             min: 0,
             max: 40,
             interval: 10,
@@ -100,24 +105,26 @@ const options = reactive({
     ],
 });
 
-watch(() => props.rain, () => {
-    options.xAxis[0].data = props.rain.legend;
-    options.series[0].data = props.rain.pcpn;
-    options.series[1].data = props.rain.rain_days;
-    change.value++;
-})
-
-
+watch(
+    () => props.rain,
+    () => {
+        options.xAxis[0].data = props.rain.legend;
+        options.series[0].data = props.rain.pcpn;
+        options.series[1].data = props.rain.rain_days;
+        options.title.text = `${citySearch.location}市年度降水量统计`;
+        change.value++;
+    }
+);
 </script>
 
 <template>
-    <div class="rainChartBox w-full h-full">
-        <WeatherMixChart
-            id="historical-rains"
-            :options="options"
-            :change="change"
-         />
+    <div class="rainChartBox w-full h-full bg-gray-100 rounded-xl">
+        <WeatherMixChart self-id="historical-rains" :options="options" :change="change" />
     </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.rainChartBox {
+    padding: 24px;
+}
+</style>
