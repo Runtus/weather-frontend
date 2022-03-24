@@ -49,14 +49,18 @@ export const useToolsDataStore = defineStore<
 export const useDateRange = defineStore('dateRange', {
     state: () => {
         return {
-            begin: '',
-            end: '',
-        }
+            begin: '2000-01-01',
+            end: '2022-12-31',
+        };
     },
     actions: {
         set(begin: string, end: string) {
             this.begin = begin;
             this.end = end;
-        }
-    }
-})
+        },
+        reSetting() {
+            this.begin = '2000-01-01';
+            this.end = '2022-12-31';
+        },
+    },
+});

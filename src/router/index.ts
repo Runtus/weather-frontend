@@ -11,7 +11,7 @@ const WeatherTools = () => import('@/pages/WeatherTools.vue');
 
 const routes: RouteRecordRaw[] = [
     {
-        path: '/',
+        path: '/worldMap',
         component: WorldMap,
     },
     {

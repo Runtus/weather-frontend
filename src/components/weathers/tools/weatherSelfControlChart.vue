@@ -113,6 +113,7 @@ const render = () => {
     }
 };
 
+
 watch(
     () => [render_data.value.length, props.date, props.weatherAttr],
     () => {
@@ -121,10 +122,13 @@ watch(
             options.value = defalutOptions;
             return;
         }
+        let beginStorage: string = '2000-01-01', endStorage: string = '2022-12-31';
         const legend: Array<string> = [...props.postion.map(item => JSON.parse(item).name)];
         const yOptions = rangeSettingOption(props.weatherAttr);
         // weather-pre的情况 先考虑多线条的情况
         if (props.weatherType === 'pre') {
+            const date = props.date.split(',');
+            const begin = new Date(date[0]), end = new Date(date[1]);
             const xAxis: Array<Array<string>> = [];
             const series: Array<OptionSeriesItem> = [];
             (render_data.value as Array<{ key: string; data: PreWeather30 }>).forEach(item => {
@@ -135,10 +139,17 @@ watch(
                     type: 'line',
                     data: [],
                 };
+                // 日历日期备份
+                beginStorage = new Date().getFullYear + '-' + item.data[0].date;
+                endStorage = new Date().getFullYear + '-' + item.data[item.data.length - 1].date;
                 item.data.forEach(weather => {
-                    const dateArray = weather.date.split('-');
-                    const date = `${dateArray[1]}-${dateArray[2]}`;
-                    x.push(date);
+                    const orderDate = new Date(weather.date).getTime();
+                    // 在规定时间范围内才能够算
+                    if(orderDate >= begin.getTime() && orderDate <= end.getTime()){
+                        const dateArray = weather.date.split('-');
+                        const date = `${dateArray[1]}-${dateArray[2]}`;
+                        x.push(date);
+                    }
                 });
                 y.data = [...preWeatherYData(props.weatherAttr as 'temp' | 'sd' | 'rain', item.data)];
                 xAxis.push(x);
@@ -184,14 +195,21 @@ watch(
             options.value.series = [...series];
         } else if (props.weatherType === 'h-month') {
             let xAxis: Array<string> = [];
+            const date = props.date.split(',');
+            const begin = date[0].split('-'), end = date[1].split('-');
+            const beginYM = new Date(`${begin[0]}-${begin[1]}`);
+            const endYM = new Date(`${end[0]}-${end[1]}`);
             const serirs: Array<OptionSeriesItem> = [];
             (render_data.value as Array<{ key: string; data: HistoricalWeather }>).forEach(item => {
-                const x: Array<string> = [...historicalXAxias(props.weatherAttr as 'temp' | 'sd' | 'rain' | 'aqi', item.data)];
+                const x: Array<string> = [...historicalXAxias(props.weatherAttr as 'temp' | 'sd' | 'rain' | 'aqi', item.data, beginYM, endYM)];
                 const y: OptionSeriesItem = {
                     name: item.key,
                     type: 'line',
                     data: []
                 };
+                beginStorage = item.data.rain.legend[0];
+                endStorage = item.data.rain.legend[item.data.rain.legend.length - 1];
+
                 y.data = [...historicalWeather(props.weatherAttr as 'temp' | 'sd' | 'rain' | 'aqi', item.data)]
                 xAxis = [...x];
                 serirs.push(y);
@@ -202,10 +220,8 @@ watch(
 
         options.value.legend.data = legend;
         options.value.yAxis = yOptions;
-        // date-range-setting
-        const begin = options.value.xAxis.data[0];
-        const end = options.value.xAxis.data[options.value.xAxis.data.length - 1];
-        date_range.set(begin, end);
+        // data_range Setting
+        date_range.set(beginStorage, endStorage);
         render();
     }
 );
@@ -221,7 +237,11 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="chartBox w-full h-full" :id="props.selfId"></div>
+    <div class="w-full toolsChart" :id="props.selfId"></div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.toolsChart {
+    height: 800px;
+}
+</style>

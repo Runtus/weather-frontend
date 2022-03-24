@@ -9,7 +9,8 @@
  */
 // @ts-ignore
 import ToolsChart from '@/components/weathers/tools/weatherSelfControlChart.vue';
-import { reactive, watch } from 'vue';
+import { reactive, watch, ref, onMounted } from 'vue';
+import moment, { Moment } from 'moment'
 import { TreeSelect, Select, DatePicker, MonthPicker, RangePicker } from 'ant-design-vue';
 import { fetchPreWeather } from '@/axios/weatherPre';
 import { requestCurrentWeather } from '@/axios/weatherCurrent';
@@ -18,8 +19,9 @@ import { useToolsDataStore, useDateRange } from '@/store/weatherTools';
 import { debounce } from '@/utils/debouce';
 import { fetchSearchCitys } from '@/axios/weatherTools';
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+import { throttle } from 'echarts/core';
 
-const DEFAULT_DATE = '2022-02';
+const DEFAULT_DATE = '2000-01-01,2022-12-31';
 const DEFAULT_WEATHER_ATTR = 'temp';
 
 const form = reactive<{
@@ -119,6 +121,12 @@ const onSelectDate = (value: any, moment: string) => {
     form.date = moment;
 };
 
+
+const onRangeSelectDate = (value: any, dateString: [string, string]) => {
+    console.log(dateString)
+    form.date = dateString.join(',');
+}
+
 // 天气属性Select
 const weatherAttrsOptions = [
     {
@@ -202,19 +210,47 @@ watch(
         }
     }
 );
+
+
+
+
+const disabledDate = reactive({
+        func: (current: Moment) => {
+        const begin = moment(dateRange.begin).format('x'), end = moment(dateRange.end).format('x')
+        const choose = current.format('x');
+        return begin > choose || choose > end;
+    }
+})
+
+
+const screenHeight = ref(0);
+onMounted(() => {
+    screenHeight.value = document.body.clientHeight;
+    console.log(screenHeight.value)
+    window.onresize = throttle(() => {
+        screenHeight.value = document.body.clientHeight;
+    }, 250)
+})
+
 </script>
 
 <template>
-    <div class="weather-tools-box w-full">
-        <div class="tools-citys-time-box">
+    <div :style="{height: `${ screenHeight - 52}px`}" class="weather-tools-box w-full flex justify-between">
+        <div class="chartBox flex justify-center p-4 h-full bg-gray-100">
+            <ToolsChart self-id="toolsChartBox" :weather-type="form.weatherType" :postion="form.position" :date="form.date" :weather-attr="form.weatherAttr" />
+        </div>
+        <div class="tools-citys-time-box flex flex-col w-60 p-4 h-full">
             <!-- 希望比较的类型：实时，历史，预测 -->
-            <div class="compare-type">
-                <TreeSelect :default-value="form.weatherType" class="w-40" :tree-data="weatherTypeSelectOptions" @change="onWeatherTypeSelect" />
+            <div class="compare-type flex flex-col">
+                <span class="title">
+                    大致时间范围选择
+                </span>
+                <TreeSelect :default-value="form.weatherType" class="w-52" :tree-data="weatherTypeSelectOptions" @change="onWeatherTypeSelect" />
             </div>
-            <div class="position">
+            <div class="position flex flex-col mt-6">
                 <span class="title">地区选择</span>
                 <Select
-                    class="w-36"
+                    class="w-52"
                     mode="multiple"
                     auto-clear-search-value
                     show-search
@@ -225,25 +261,45 @@ watch(
                     placeholder="城市搜索"
                 />
             </div>
-            <div class="time-picker-box">
+            <div class="time-picker-box flex flex-col mt-6">
                 <span class="title">时间范围选择</span>
-                <MonthPicker @change="onSelectDate" format="YYYY-MM" v-if="form.weatherType === 'h-date'" :locale="locale" />
-                <DatePicker :locale="locale" @change="onSelectDate" format="YYYY-MM-DD" :disabled="form.weatherType === 'cur'" v-else />
+                <MonthPicker 
+                    class="w-52"
+                    @change="onSelectDate" 
+                    format="YYYY-MM" 
+                    v-if="form.weatherType === 'h-date'" 
+                    :locale="locale" 
+                />
+                <RangePicker 
+                    class="w-52"
+                    :locale="locale" 
+                    @change="onRangeSelectDate" 
+                    format="YYYY-MM-DD" 
+                    :disabled-date="disabledDate.func"
+                    :disabled="form.weatherType === 'cur'" 
+                    v-else 
+                />
             </div>
-            <div class="weather-attrs">
+            <div class="weather-attrs flex flex-col mt-6">
                 <span class="title">天气属性选择</span>
-                <Select class="w-40" :options="weatherAttrsOptions" @select="onSelectWeatherAttrs" />
+                <Select class="w-52" :options="weatherAttrsOptions" @select="onSelectWeatherAttrs" />
             </div>
-        </div>
-        <div class="chartBox">
-            <ToolsChart self-id="toolsChartBox" :weather-type="form.weatherType" :postion="form.position" :date="form.date" :weather-attr="form.weatherAttr" />
         </div>
     </div>
 </template>
 
 <style lang="stylus" scoped>
 .chartBox {
-    width: 500px;
-    height: 500px;
+    width: calc(100% - 15rem);
+    min-width: 500px;
+}
+
+
+.tools-citys-time-box {
+    height: 600px;
+
+    .title {
+        font-size: 16px;
+    }
 }
 </style>

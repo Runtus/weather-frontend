@@ -31,6 +31,7 @@ declare module 'vue' {
     WeatherSelects: typeof import('./src/components/weathers/tools/weatherSelects.vue')['default'];
     WeatherSelfControlChart: typeof import('./src/components/weathers/tools/weatherSelfControlChart.vue')['default']
     Worldmap: typeof import('./src/components/contents/worldmap.vue')['default']
+    WorldmapBaidu: typeof import('./src/components/contents/worldmapBaidu.vue')['default']
   }
 }
 

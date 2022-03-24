@@ -32,8 +32,8 @@ const CURRENT_WEATHER_MAP = {
     temp: 'temp',
     sd: 'SD',
     rain: 'rain',
-    aqi: 'aqi'
-}
+    aqi: 'aqi',
+};
 
 export const currentWeatherYData = (type: 'temp' | 'sd' | 'rain' | 'aqi', data: CurrentWeather) => {
     const yData: number[] = [];
@@ -44,7 +44,7 @@ export const currentWeatherYData = (type: 'temp' | 'sd' | 'rain' | 'aqi', data: 
         yData.push(item[key]);
     });
     return yData;
-}
+};
 
 export const historicalWeather = (type: 'temp' | 'sd' | 'rain' | 'aqi', data: HistoricalWeather) => {
     let yData: number[] = [];
@@ -52,26 +52,35 @@ export const historicalWeather = (type: 'temp' | 'sd' | 'rain' | 'aqi', data: Hi
         yData = [...data.temp.avgTmp];
     } else if (type === 'aqi') {
         data.aqi.forEach(item => {
-            yData.push(Number(item.value))
-        })
+            yData.push(Number(item.value));
+        });
     } else if (type === 'rain') {
-        yData = [...data.rain.pcpn]
+        yData = [...data.rain.pcpn];
     } else if (type === 'sd') {
-        yData = [...data.sd.value]
+        yData = [...data.sd.value];
     }
 
     return yData;
-}
+};
 
-export const historicalXAxias = (type: 'temp' | 'sd' | 'rain' | 'aqi', data: HistoricalWeather) => {
-    let x: Array<string> = []
+export const historicalXAxias = (type: 'temp' | 'sd' | 'rain' | 'aqi', data: HistoricalWeather, begin: Date, end: Date) => {
+    let x: Array<string> = [];
     if (type === 'aqi') {
         data.aqi.forEach(item => {
             x.unshift(item.date);
-        })
+        });
     } else {
         // rain temp sd 的 x轴是相同的，所以直接用rain的legend去替代
-        x = [...data.rain.legend]
+        x = [
+            ...data.rain.legend.filter(item => {
+                const order = new Date(item).getTime();
+                if (order >= begin.getTime() && order <= end.getTime()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }),
+        ];
     }
     return x;
-}
+};
