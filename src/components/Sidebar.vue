@@ -1,30 +1,39 @@
 <script lang="ts" setup>
 // 路由在这里控制
 import { defineProps, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { Menu, MenuItem } from 'ant-design-vue';
 import { CalendarOutlined, EnvironmentOutlined, CloudOutlined, HistoryOutlined, LineChartOutlined } from '@ant-design/icons-vue';
 import { useSidebarButtonStatus } from '@/store/sidebar';
 
 const buttonStatus = useSidebarButtonStatus();
 const router = useRouter();
-
+const routes = useRoute();
+console.log(routes.path)
 const onSelect = (obj: { key: string }) => {
     if (obj.key) {
         router.push(`/${obj.key}`);
     }
 };
+
 </script>
 
 <template>
     <div class="MenuBox h-full" :class="buttonStatus.isCollapsed ? 'collapsed' : 'uncollapsed'">
         <div class="title w-full flex items-center justify-center">TODO 某张图片占据</div>
-        <Menu mode="inline" theme="dark" class="menu" @select="onSelect" :inline-collapsed="buttonStatus.isCollapsed">
+        <Menu
+            mode="inline" 
+            theme="dark" 
+            class="menu" 
+            :selectedKeys="[routes.path.split('/')[1]]"
+            @select="onSelect" 
+            :inline-collapsed="buttonStatus.isCollapsed"
+        >
             <MenuItem key="worldMap">
                 <template #icon>
                     <EnvironmentOutlined />
                 </template>
-                <span>世界地图工具</span>
+                <span>地图工具</span>
             </MenuItem>
             <MenuItem key="current">
                 <template #icon>

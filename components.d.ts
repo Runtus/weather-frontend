@@ -15,20 +15,17 @@ declare module 'vue' {
     HistoricalSD: typeof import('./src/components/weathers/history/historicalSD.vue')['default']
     HistoricalTemp: typeof import('./src/components/weathers/history/historicalTemp.vue')['default']
     HoverCard: typeof import('./src/components/weathers/pre/cards/hoverCard.vue')['default']
-    LocalCurrentWeather: typeof import('./src/components/weathers/Common/LocalCurrentWeather.vue')['default'];
+    Legend: typeof import('./src/components/weathers/worldmap/Legend.vue')['default']
     LocalPM25: typeof import('./src/components/weathers/current/LocalPM25.vue')['default']
     LocalPreWeather: typeof import('./src/components/weathers/current/LocalPreWeather.vue')['default']
-    LocationCards: typeof import('./src/components/weathers/Common/locationCards.vue')['default'];
     PreRain: typeof import('./src/components/weathers/pre/preRain.vue')['default']
     PreTemp: typeof import('./src/components/weathers/pre/preTemp.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
-    TempCard: typeof import('./src/components/weathers/Common/tempCard.vue')['default'];
     TempLineChart: typeof import('./src/components/weathers/current/charts/tempLineChart.vue')['default']
     WeatherCityCards: typeof import('./src/components/weathers/Common/WeatherCityCards.vue')['default']
     WeatherFanChart: typeof import('./src/components/weathers/Common/WeatherFanChart.vue')['default']
     WeatherLineChart: typeof import('./src/components/weathers/Common/WeatherLineChart.vue')['default']
     WeatherMixChart: typeof import('./src/components/weathers/Common/WeatherMixChart.vue')['default']
-    WeatherSelects: typeof import('./src/components/weathers/tools/weatherSelects.vue')['default'];
     WeatherSelfControlChart: typeof import('./src/components/weathers/tools/weatherSelfControlChart.vue')['default']
     Worldmap: typeof import('./src/components/contents/worldmap.vue')['default']
     WorldmapBaidu: typeof import('./src/components/contents/worldmapBaidu.vue')['default']

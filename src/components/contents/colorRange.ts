@@ -1,25 +1,43 @@
+export enum TEMP_COLOR {
+    l1 = '#5E3794',
+    l2 = '#332B81',
+    l3 = '#2B4293',
+    l4 = '#255EA4',
+    l5 = '#3C81B5',
+    l6 = '#3B975D',
+    l7 = '#C3B237',
+    l8 = '#E07C26',
+    l9 = '#D25E1F',
+    l10= '#B84617',
+}
+
+export enum SD_COLOR {
+    
+}
+
+
 export const tempColorSetting = (temp: number | string) => {
     const format = typeof temp === 'string' ? Number(temp) : temp;
     if (format < -40) {
-        return '#5E3794';
+        return TEMP_COLOR.l1;
     } else if (format < -30) {
-        return '#332B81';
+        return TEMP_COLOR.l2;
     } else if (format < -20) {
-        return '#2B4293';
+        return TEMP_COLOR.l3;
     } else if (format < -10) {
-        return '#255EA4';
+        return TEMP_COLOR.l4;
     } else if (format < 0) {
-        return '#3C81B5';
+        return TEMP_COLOR.l5;
     } else if (format < 10) {
-        return '#3B975D';
+        return TEMP_COLOR.l6;
     } else if (format < 20) {
-        return '#C3B237';
+        return TEMP_COLOR.l7;
     } else if (format < 30) {
-        return '#E07C26';
+        return TEMP_COLOR.l8;
     } else if (format < 40) {
-        return '#D25E1F';
+        return TEMP_COLOR.l9;
     } else {
-        return '#B84617';
+        return TEMP_COLOR.l10;
     }
 };
 
@@ -71,23 +89,23 @@ export const colorSetting = {
     },
     temp: (temp: number | string) => {
         const format = typeof temp === 'string' ? Number(temp) : temp;
-        if (format < -40) {
+        if (format < -20) {
             return '#5E3794';
-        } else if (format < -30) {
-            return '#332B81';
-        } else if (format < -20) {
-            return '#2B4293';
         } else if (format < -10) {
-            return '#255EA4';
+            return '#332B81';
         } else if (format < 0) {
-            return '#3C81B5';
+            return '#2B4293';
+        } else if (format < 5) {
+            return '#255EA4';
         } else if (format < 10) {
+            return '#3C81B5';
+        } else if (format < 15) {
             return '#3B975D';
-        } else if (format < 20) {
+        } else if (format < 25) {
             return '#C3B237';
         } else if (format < 30) {
             return '#E07C26';
-        } else if (format < 40) {
+        } else if (format < 35) {
             return '#D25E1F';
         } else {
             return '#B84617';

@@ -1,36 +1,65 @@
 <script lang="ts" setup>
 import { useCurrentWeather } from '@/store/worldmap';
+import { useLocationSearchResult } from '@/store/search'
 import { onMounted, reactive, watch } from 'vue';
+import { useRouter } from 'vue-router'
 import { throttling } from '@/utils/throttling';
 import { renderTempItem } from '@/axios/worldmap';
 import { colorSetting } from './colorRange';
 import { fetchWorldMapTemps } from '@/axios/worldmap';
-import * as echarts from 'echarts/core';
-import { TitleComponent, TooltipComponent } from 'echarts/components';
-import { ScatterChart, EffectScatterChart } from 'echarts/charts';
-import { UniversalTransition } from 'echarts/features';
-import { CanvasRenderer } from 'echarts/renderers';
+// import * as echarts from 'echarts/core';
+// import { TitleComponent, TooltipComponent } from 'echarts/components';
+// import { ScatterChart, EffectScatterChart, MapChart } from 'echarts/charts';
+// import { UniversalTransition } from 'echarts/features';
+// import { CanvasRenderer } from 'echarts/renderers';
+import BMapSetting from '@/baidu-map';
 
+// echarts.use([MapChart, TitleComponent, TooltipComponent, ScatterChart, EffectScatterChart, CanvasRenderer, UniversalTransition]);
 
-echarts.use([TitleComponent, TooltipComponent, ScatterChart, EffectScatterChart, CanvasRenderer, UniversalTransition]);
+const TYPE_MAP_NAME = {
+    temp : {
+        title: '全国主要城市温度情况',
+        name: '温度'
+    },
+    sd: {
+        title: '全国主要城市相对湿度',
+        name: '相对湿度'
+    },
+    aqi: {
+        title: '全国主要城市空气质量',
+        name: 'AQI系数'
+    }
+}
+
 
 const current = useCurrentWeather();
+const searchResult = useLocationSearchResult();
+const router = useRouter();
 
 let chart: any = null;
 
 const props = defineProps<{
     type: 'temp' | 'sd' | 'aqi';
+    isTop: boolean;
 }>();
 
+
 const convertData = function (data: renderTempItem[], type: 'temp' | 'sd' | 'aqi') {
-    const res = data.map(item => {
+    let format: renderTempItem[] = [];
+    if(type === 'aqi'){
+        format = data.filter(item => item.aqi);
+    } else {
+        format = [...data]
+    }
+
+    const res = format.map(item => {
         return {
             name: item.name,
             value: [item.lon, item.lat, Number(item[type])],
         };
     });
     return res;
-};
+}
 
 const options = reactive({
     value: {
@@ -172,7 +201,14 @@ const options = reactive({
                 data: convertData(current.data, props.type),
                 // @ts-ignore
                 symbolSize: function (val) {
-                    return val[2] / 10;
+                    return (val[2] + 50) / 10;
+                },
+                itemStyle: {
+                    // @ts-ignore
+                    color: (params) => {
+                       const color = colorSetting[props.type](params.value[2]);
+                       return color;
+                    }
                 },
                 encode: {
                     value: 2,
@@ -192,18 +228,10 @@ const options = reactive({
                 name: 'Top 5',
                 type: 'effectScatter',
                 coordinateSystem: 'bmap',
-                data: convertData(
-                    current.data
-                        .sort(function (a, b) {
-                            const type = props.type;
-                            return Number(a[type]) - Number(b[type]);
-                        })
-                        .slice(0, 6),
-                    props.type
-                ),
+                data: [],
                 // @ts-ignore
                 symbolSize: function (val) {
-                    return val[2] / 10;
+                    return (val[2] + 100) / 10;
                 },
                 encode: {
                     value: 2,
@@ -232,18 +260,38 @@ const options = reactive({
 
 const render = () => {
     if (chart) {
+        let renderData = []
+        if(props.isTop){
+            renderData = convertData(
+                current.data
+                        .sort(function (a, b) {
+                            const type = props.type;
+                            return (Number(b[type]) || 0) - (Number(a[type]) || 0);
+                        })
+                        .slice(0, 30),
+                        props.type
+            )
+        } else {
+            renderData = convertData(current.data, props.type)
+        }
+
+        options.value.title.text = TYPE_MAP_NAME[props.type].title;
+        options.value.series[0].name = TYPE_MAP_NAME[props.type].name;
+        options.value.series[0].data = renderData;
+        options.value.series[1].data = props.isTop ? renderData.slice(0,5) : [];
         chart.setOption(options.value);
-        console.log(options)
     }
 };
 
 onMounted(async () => {
+
     if (current.data.length === 0) {
         const result = await fetchWorldMapTemps();
         current.set(result.data);
     }
 
     const chartDom = document.getElementById('map') as HTMLElement;
+    // @ts-ignore
     const myChart = echarts.init(chartDom);
     chart = myChart;
 
@@ -251,11 +299,19 @@ onMounted(async () => {
         myChart.resize();
     });
 
-    render()
+    myChart.on('click', (params: any) => {
+        console.log(params)
+        const name = params.name;
+        searchResult.set(name);
+        setTimeout(() => {
+            router.push('/current');
+        }, 500)
+    })
+    render();
 });
 
 watch(
-    () => props.type,
+    () =>[props.type, props.isTop],
     () => {
         render();
     }
@@ -268,6 +324,6 @@ watch(
 
 <style lang="stylus" scoped>
 #map {
-    border: 1px solid red;
+
 }
 </style>
